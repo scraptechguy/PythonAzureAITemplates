@@ -40,3 +40,18 @@ def collectResult(evt):
     global result 
     result += " {}".format(evt.result.text)
 
+
+    
+# code from here to the three hashes must be called only once as it would otherwise create
+# multiple listening sessions and the variable result would store doubled or tripled (based on how many
+# times have you started the session) results. 
+
+# create a listening session on Azure for speech recognition
+        
+speech_recognizer.recognized.connect(lambda evt: collectResult(evt))
+speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED:    {}'.format(evt)))
+speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
+speech_recognizer.canceled.connect(lambda evt: print('CANCELED {}'.format(evt)))
+
+speech_recognizer.session_stopped.connect(stop_cb)
+speech_recognizer.canceled.connect(stop_cb)
